@@ -11,6 +11,10 @@ from agents.synthesizer_agent import create_itinerary
 
 class TravelState(TypedDict):
     destination: str
+    days: int
+    budget: float
+    travel_style: str
+    travelers: int
     planner: str
     info: str
     hotel: str
@@ -22,9 +26,17 @@ class TravelState(TypedDict):
 # ---------------- Planner Node ----------------
 def planner_node(state: TravelState):
 
-    state["planner"] = planner(
-        f"Plan a trip to {state['destination']}"
-    )
+    planning_prompt = f"""
+Destination: {state['destination']}
+Days: {state['days']}
+Budget: {state['budget']} USD
+Travel Style: {state['travel_style']}
+Travelers: {state['travelers']}
+
+Based on the details above, create the best travel strategy.
+"""
+
+    state["planner"] = planner(planning_prompt)
 
     return state
 
@@ -43,7 +55,13 @@ def planner_router(state: TravelState):
 # ---------------- Info Node ----------------
 def info_node(state: TravelState):
 
-    state["info"] = travel_info(state["destination"])
+    state["info"] = travel_info(
+        destination=state["destination"],
+        days=state["days"],
+        budget=state["budget"],
+        travel_style=state["travel_style"],
+        travelers=state["travelers"],
+    )
 
     return state
 
@@ -51,7 +69,13 @@ def info_node(state: TravelState):
 # ---------------- Hotel Node ----------------
 def hotel_node(state: TravelState):
 
-    state["hotel"] = hotel_info(state["destination"])
+    state["hotel"] = hotel_info(
+        destination=state["destination"],
+        days=state["days"],
+        budget=state["budget"],
+        travel_style=state["travel_style"],
+        travelers=state["travelers"],
+    )
 
     return state
 
@@ -59,7 +83,13 @@ def hotel_node(state: TravelState):
 # ---------------- Flight Node ----------------
 def flight_node(state: TravelState):
 
-    state["flight"] = flight_info(state["destination"])
+    state["flight"] = flight_info(
+        destination=state["destination"],
+        days=state["days"],
+        budget=state["budget"],
+        travel_style=state["travel_style"],
+        travelers=state["travelers"],
+    )
 
     return state
 
@@ -67,7 +97,13 @@ def flight_node(state: TravelState):
 # ---------------- Activity Node ----------------
 def activity_node(state: TravelState):
 
-    state["activity"] = activity_info(state["destination"])
+    state["activity"] = activity_info(
+        destination=state["destination"],
+        days=state["days"],
+        budget=state["budget"],
+        travel_style=state["travel_style"],
+        travelers=state["travelers"],
+    )
 
     return state
 
